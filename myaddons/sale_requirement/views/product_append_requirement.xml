@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+    <!--Wizard-->
+    <record id="view_form_wizard_product_product_append_br" model="ir.ui.view">
+        <field name="name">product.product.append.br.view.form</field>
+        <field name="model">product.product.append.br</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="quotation_id" invisible="1" required="1"/>
+                        <field name="requirement_id" invisible="1" required="1"/>
+                        <field name="partner_id" readonly="1" required="1"/>
+                        <field name="image" readonly="1" widget="image"/>
+                    </group>
+                    <group>
+                        <field name="product_id" required="1" readonly="1"/>
+                        <field name="name" />
+                    </group>
+                </group>
+                <footer>
+                    <button name="apply_insert" string="Accept" type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    </data>
+</odoo>

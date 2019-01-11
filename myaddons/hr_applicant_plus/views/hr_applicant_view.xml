@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_contacts_search_form_view" model="ir.ui.view">
+        <field name="name">res.contacts.search.form</field>
+        <field name="model">res.contacts</field>
+        <field name="arch" type="xml">
+            <search string="applicant">
+                <filter string="Applicant" name="applicant_id" context="{'group_by':'applicant'}"/>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- MISSING FORM VIEW -->
+    <record id="view_res_contacts_form" model="ir.ui.view">
+        <field name="name">res.contacts.form</field>
+        <field name="model">res.contacts</field>
+        <field name="arch" type="xml">
+            <form string="hr missing">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="applicant_id" placeholder="Description of missing"/>
+                            <field name="type"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- MISSING TREE VIEW -->
+    <record id="view_res_contacts_tree" model="ir.ui.view">
+        <field name="name">res.contacts.tree</field>
+        <field name="model">res.contacts</field>
+        <field name="arch" type="xml">
+            <tree string="Missing">
+                <field name="name"/>
+                <field name="applicant_id"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- MISSING LINE ACTION -->
+    <record id="action_res_contacts" model="ir.actions.act_window">
+        <field name="name">contacts</field>
+        <field name="res_model">res.contacts</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_by_applicant_id': True}</field>
+    </record>
+
+
+    <!-- EMPLOYEES INHERITED FORM VIEW -->
+    <record id="view_applicant_form_contacts" model="ir.ui.view">
+        <field name="name">hr.applicant.form.contacts</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                  <button type="action" class="oe_stat_button"
+                           name="%(action_res_contacts)d"
+                           context="{'default_applicant_id':active_id}"
+                           domain="[('applicant_id','=',active_id)]"
+                           string="Contacts">
+                  </button>
+            </xpath>
+            <xpath expr="//field[@name='availability']" position="after">
+                <field name="leave_date"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- EMPLOYEES INHERITED FORM VIEW -->
+    <record id="view_applicant_kanban_contacts" model="ir.ui.view">
+        <field name="name">hr.applicant.form.contacts</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="contacts_count"/>
+                <field name="availability"/>
+                <field name="leave_date"/>
+            </xpath>
+            <xpath expr="//div/field[@name='job_id']" position="after">
+                <br/><field name="availability" attrs="{'invisible':[('availability','=',False)]}"/>
+                <br/><field name="leave_date" attrs="{'invisible':[('leave_date','=',False)]}"/>
+                <br/>
+                    <label for="salary_expected"/>
+                    <div>
+                        <field name="salary_expected" class="oe_inline"/>
+                        <span class="oe_inline" attrs="{'invisible':[('salary_expected_extra','=',False)]}"> + </span>
+                        <field name="salary_expected_extra" class="oe_inline" placeholder="Extra advantages..."/>
+                    </div>
+            </xpath>
+            <!--<xpath expr="//div[@class='oe_kanban_bottom_left']" position="inside">-->
+                <!--<a t-if="record.contacts_count"-->
+                   <!--type="object"-->
+                   <!--name="action_res_contacts"><field name="contacts_count"/> Contacts</a>-->
+            <!--</xpath>-->
+        </field>
+    </record>
+
+    <!-- MISSING MENU -->
+    <menuitem id="menu_missing" parent="hr_recruitment.menu_hr_recruitment_root"
+              action="action_res_contacts"/>
+</odoo>

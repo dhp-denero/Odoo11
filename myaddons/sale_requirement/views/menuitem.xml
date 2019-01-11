@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+      <menuitem id="main_menu_sale_quotation"
+                groups="sale_requirement.requirement_users"
+                name="Requirement"/>
+
+      <!--Requirement母集-->
+      <menuitem id="sale_quotation_menu"
+                name="Requirement"
+                parent="main_menu_sale_quotation"
+                sequence="1"/>
+
+      <menuitem id="product_quotation_menu"
+                name="Supply Chain"
+                groups="purchase.group_purchase_user"
+                parent="main_menu_sale_quotation"
+                sequence="2"/>
+
+      <menuitem id="sale_requirement_management"
+                name="Management"
+                parent="main_menu_sale_quotation"
+                sequence="10"/>
+
+      <menuitem id="sale_requirement_tags_quotation"
+                name="Feedback Tags"
+                parent="sale_requirement_management"
+                action="action_tags_quotation"
+                sequence="1"/>
+
+      <menuitem id="sale_requirement_hotel_style"
+                name="Hotel Style"
+                parent="sale_requirement_management"
+                action="action_hotel_style_tags"
+                groups="sales_team.group_sale_salesman"
+                sequence="2"/>
+
+      <menuitem id="sale_quotation"
+                name="Quotations"
+                parent="sale_quotation_menu"
+                groups="sale_requirement.requirement_users"
+                action="action_sale_quotation"/>
+
+      <menuitem id="sale_requirement_requirement_scenario"
+                name="Project Scenario"
+                parent="sale_requirement_management"
+                action="action_scenario_tags"
+                groups="sales_team.group_sale_salesman"
+                sequence="3"/>
+
+      <menuitem id="product_quotation"
+                name="Quotations"
+                parent="product_quotation_menu"
+                action="action_product_quotation"/>
+
+        <menuitem
+            name="Purchase Project"
+            id="menu_quotation_cycle"
+            parent="main_menu_sale_quotation"
+            groups="purchase.group_purchase_user"/>
+
+
+        <menuitem
+            name="All plan"
+            id="all_quotation_cycle"
+            action="action_quotation_cycle"
+            parent="menu_quotation_cycle"/>
+
+      <menuitem id="purchase_plan"
+                name="Purchase Plan"
+                parent="sale_quotation_menu"
+                groups="sale_requirement.requirement_users"
+                action="action_quotation_cycle"/>
+
+        <menuitem
+            name="Sale Plan"
+            id="menu_sale_order_line_menu"
+            parent="purchase.menu_procurement_management"
+            groups="purchase.group_purchase_user"/>
+
+        <menuitem
+            name="All sales list"
+            id="menu_sale_order_line_all"
+            parent="purchase.menu_procurement_management"
+            action="action_quotation_cycle"/>
+    </data>
+</odoo>

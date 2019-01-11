@@ -1,0 +1,5 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+access_res_contacts_user,res.contacts,model_res_contacts,base.group_user,1,0,0,0
+access_res_contacts_manager,res.contacts,model_res_contacts,hr.group_hr_user,1,1,1,1
+access_res_contacts_CHO,res.contacts,model_res_contacts,hr.group_hr_manager,1,1,1,1
+,,,,,,,

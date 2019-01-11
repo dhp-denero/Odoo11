@@ -1,0 +1,24 @@
+<odoo>
+  <data>
+      <!-- inherit res_partner view_partner_form-->
+      <record id="res_partner_phone" model="ir.ui.view">
+          <field name="name">res_partner_phone</field>
+          <field name="model">res.partner</field>
+          <field name="inherit_id" ref="base.view_partner_form"/>
+          <field name="arch" type="xml">
+                <xpath expr="//page[@name='internal_notes']" position="before">
+                    <page string="Phone &amp; Username">
+                        <field name="partner_phone_ids">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="number_or_username"/>
+                                <field name="tags" widget="many2many_tags"/>
+                                <field name="note"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+          </field>
+      </record>
+  </data>
+</odoo>

@@ -1,0 +1,71 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <!--
+    <record model="ir.ui.view" id="document_preview.list">
+      <field name="name">document_preview list</field>
+      <field name="model">document_preview.document_preview</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+    <record model="ir.ui.view" id="view_document_preview">
+      <field name="name">Viewer</field>
+      <field name="model">ir.attachment</field>
+      <field name="inherit_id" ref="base.view_attachment_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//group/field[@name='url']" position="after">
+            <group>
+                <field name="doc_url" widget="url" string="Preview"/>
+            </group>
+        </xpath>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="document_preview.action_window">
+      <field name="name">document_preview window</field>
+      <field name="res_model">document_preview.document_preview</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="document_preview.action_server">
+      <field name="name">document_preview server</field>
+      <field name="model_id" ref="model_document_preview_document_preview"/>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="document_preview" id="document_preview.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="document_preview.menu_1" parent="document_preview.menu_root"/>
+    <menuitem name="Menu 2" id="document_preview.menu_2" parent="document_preview.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="document_preview.menu_1_list" parent="document_preview.menu_1"
+              action="document_preview.action_window"/>
+    <menuitem name="Server to list" id="document_preview" parent="document_preview.menu_2"
+              action="document_preview.action_server"/>
+    -->
+  </data>
+</odoo>

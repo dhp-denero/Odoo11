@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2018 Modoolar <info@modoolar.com>
+  License LGPLv3.0 or later (https://www.gnu.org/licenses/lgpl-3.0.en.html).
+-->
+<odoo>
+    <data>
+        <template id="assets_backend" name="Bootstrap Treeview" inherit_id="web.assets_backend">
+            <xpath expr=".">
+                <link rel="stylesheet" href="/web_bootstrap_treeview/static/lib/css/bootstrap-treeview.css"/>
+                <script type="text/javascript" src="/web_bootstrap_treeview/static/lib/js/bootstrap-treeview.js"/>
+                <script type="text/javascript" src="/web_bootstrap_treeview/static/src/js/bootstrap-treeview.js"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

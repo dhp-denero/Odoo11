@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!--         <record id="view_form_sale_requirement_inherit" model="ir.ui.view">
+            <field name="name">sale_requirement.view.form.inherit.attachment</field>
+            <field name="model">sale.requirement</field>
+            <field name="inherit_id" ref="sale_requirement.form_sale_quotation"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='members']" position="after">
+                   <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" widget="html" style="overflow :auto"/>
+                        </page>
+                        <page string="Attachments">
+                            <group>
+                              <field name="attachment_ids" attrs="{'invisible' :[('attachment_ids', '=', [])]}">
+                              <kanban>
+                              <field name="datas_fname"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                      <div class="oe_kanban_global_click">
+                                        <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
+    										<div t-if="record.type.raw_value == 'binary'">
+                                                <a t-attf-href="/web/content/#{record.id.raw_value}?download=1">
+                                                    <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                                    <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
+                                                    <div t-if="webimage" class="o_attachment_image">
+                                                        <img t-attf-src="/web/image/#{record.id.raw_value}?download=1"/>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        <div class="oe_kanban_details">
+                                          <field name="datas_fname"/>
+                                        </div>
+                                      </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record> -->
+    </data>
+</odoo>

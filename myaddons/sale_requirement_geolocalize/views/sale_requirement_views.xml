@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_crm_partner_geo_form" model="ir.ui.view">
+            <field name="name">sale.requirement.geolocation.inherit</field>
+            <field name="model">sale.requirement</field>
+            <field name="inherit_id" ref="sale_requirement.form_sale_quotation"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page string="Partner Assignation" name="geo_location">
+                        <!-- something to do here -->
+                        <group colspan="2" col="2">
+                            <separator string="Geolocation" colspan="2"/>
+                            <button
+                                string="Geolocate"
+                                name="geo_localize"
+                                colspan="2"
+                                icon="fa-check"
+                                type="object"/>
+                            <div>
+                                <span class="oe_inline"> ( On  </span>
+                                <field name="date_localization" nolabel="1" class="oe_inline"/>
+                                <span> : Lat : </span>
+                                <field name="partner_latitude" nolabel="1" class="oe_inline"/>
+                                <span> ;  Long:  </span>
+                                <field name="partner_longitude" nolabel="1" class="oe_inline"/>
+                                <span>) </span>
+                            </div>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+      <record id="view_requirement_map" model="ir.ui.view">
+        <field name="name">view.sale.requirement.map</field>
+        <field name="model">sale.requirement</field>
+        <field name="arch" type="xml">
+            <map class="o_res_partner_map" library='geometry' string="Map" lat="partner_latitude" lng="partner_longitude" colors="green">
+                <field name="id"/>
+                <field name="partner_latitude"/>
+                <field name="partner_longitude"/>
+                <field name="name"/>
+                <field name="street"/>
+                <field name="street2"/>
+                <field name="zip"/>
+                <field name="city"/>
+                <field name="country_id"/>
+                <field name="state_id"/>
+                <field name="scenario_id"/>
+                <field name="image"/>
+                <field name="hotel_style"/>
+                <field name="total_budget"/>
+                <templates>
+                    <t t-name="kanban-box">
+                    <div t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_res_partner_kanban">
+                            <div class="o_kanban_image">
+                                <t t-if="record.image.raw_value">
+                                    <img t-att-src="kanban_image('sale.requirement', 'image', record.id.raw_value)"/>
+                                </t>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title oe_partner_heading">
+                                    <field name="name"/>
+                                </strong>
+                                <div class="o_kanban_tags_section oe_kanban_partner_categories">
+                                    <span class="oe_kanban_list_many2many">
+                                        <field name="scenario_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    </span>
+                                </div>
+                                <ul>
+                                    <li t-if="record.build_area.raw_value">
+                                        <field name="build_area"/>
+                                    </li>
+                                    <li t-if="!record.hotel_style.raw_value">
+                                        <field name="hotel_style" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    </li>
+                                    <li t-if="record.city.raw_value and !record.country_id.raw_value">
+                                        <field name="city"/>
+                                    </li>
+                                    <li t-if="!record.city.raw_value and record.country_id.raw_value">
+                                        <field name="country_id"/>
+                                    </li>
+                                    <li t-if="record.city.raw_value and record.country_id.raw_value">
+                                        <field name="city"/>
+                ,                        <field name="country_id"/>
+                                    </li>
+                                    <li t-if="record.total_budget.raw_value">
+                                        <field name="total_budget"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    </t>
+                </templates>
+            </map>
+        </field>
+    </record>
+
+    <record id="sale_requirement_map_form_inherit" model="ir.ui.view">
+        <field name="name">sale.requirement.map.form.inherit</field>
+        <field name="model">sale.requirement</field>
+        <field name="inherit_id" ref="sale_requirement.form_sale_quotation"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="requirement_map" string="View Location" type="object" icon="fa fa-map-marker" attrs="{'invisible': ['|',('is_accept','=',True),('number_of_unsure','!=',0)]}"/>
+            </xpath>
+
+            <xpath expr="//field[@name='street']" position="before">
+                <field name="address" string="Location" widget="gplaces_address_autocomplete"/>
+            </xpath>
+
+            <xpath expr="//field[@name='street']" position="attributes">
+                <attribute name="widget">gplaces_address_form</attribute>
+                <attribute name="option">{'component_form': {'street_number': 'short_name'}}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='street2']" position="attributes">
+                <attribute name="widget">gplaces_address_form</attribute>
+                <attribute name="option">{'component_form': {'administrative_area_level_3': 'short_name'}}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='city']" position="attributes">
+                <attribute name="widget">gplaces_address_form</attribute>
+                <attribute name="option">{'component_form': {'administrative_area_level_2': 'short_name'}}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state_id']" position="attributes">
+                <attribute name="widget">gplaces_address_form</attribute>
+                <attribute name="option">{'component_form': {'administrative_area_level_1': 'short_name'}}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='zip']" position="attributes">
+                <attribute name="widget">gplaces_address_form</attribute>
+                <attribute name="option">{'component_form': {'postal_code': 'short_name'}}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='country_id']" position="attributes">
+                <attribute name="widget">gplaces_address_form</attribute>
+                <attribute name="option">{'component_form': {'country': 'short_name'}}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

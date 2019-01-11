@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="hr_missing_line_search_form_view" model="ir.ui.view">
+        <field name="name">hr.employee.personality.search.form</field>
+        <field name="model">hr.employee.personality</field>
+        <field name="arch" type="xml">
+            <search string="Grade History">
+                <field name="user_id"/>
+                <field name="employee_id"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="groupby_employee" domain="[]" context="{'group_by':'employee_id'}"/>
+                    <filter string="Grade Month" name="groupby_date" domain="[]" context="{'group_by':'month'}" help="Timesheet by Month"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- MISSING FORM VIEW -->
+    <record id="view_hr_employee_personality_form" model="ir.ui.view">
+        <field name="name">hr.employee.personality.form</field>
+        <field name="model">hr.employee.personality</field>
+        <field name="arch" type="xml">
+            <form string="HR Grade">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id" required="1"/>
+                            <field name="rvalue" placeholder="Description of missing"/>
+                            <field name="dvalue"/>
+                            <field name="cvalue"/>
+                            <field name="wvalue"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="score"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- PERSONALITY TREE VIEW -->
+    <record id="view_hr_employee_personality_tree" model="ir.ui.view">
+        <field name="name">hr.employee.personality.tree</field>
+        <field name="model">hr.employee.personality</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_id"/>
+                <field name="rvalue"/>
+                <field name="dvalue"/>
+                <field name="cvalue"/>
+                <field name="wvalue"/>
+                <field name="date"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- MISSING ACTION -->
+    <record id="action_employee_personality" model="ir.actions.act_window">
+        <field name="name">Employee Personality</field>
+        <field name="res_model">hr.employee.personality</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- MISSING MENU -->
+    <menuitem id="menu_personality" parent="hr.menu_human_resources_configuration"
+              action="action_employee_personality"/>
+
+    <!-- EMPLOYEES INHERITED FORM VIEW -->
+    <!--<record id="view_employee_personality_form_button" model="ir.ui.view">-->
+        <!--<field name="name">hr.employee.personality.form.button</field>-->
+        <!--<field name="model">hr.employee.personality</field>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<xpath expr="//page[@name='personal_information']" position="before">-->
+                <!--<page name="variants" string="Personality">-->
+                    <!--<field name="employee_grade"-->
+                           <!--mode="tree"-->
+                           <!--context="{'default_employee_id': active_id,'default_user_id':uid}"-->
+                           <!--domain="[-->
+                          <!--('month', '=', datetime.today().strftime('%m')),-->
+                          <!--('year', '=', datetime.today().strftime('%Y'))]">-->
+                        <!--<tree string="Grade" editable="bottom">-->
+                            <!--<field name="user_id" invisible="1"/>-->
+                            <!--<field name="employee_id" invisible="1"/>-->
+                            <!--<field name="month" invisible="1"/>-->
+                            <!--<field name="year" invisible="1"/>-->
+                            <!--<field name="rvalue" placeholder="0~5" required="1"/>-->
+                            <!--<field name="dvalue" placeholder="0~5" required="1"/>-->
+                            <!--<field name="cvalue" placeholder="0~10" required="1"/>-->
+                            <!--<field name="wvalue" placeholder="0~15" required="1"/>-->
+                            <!--<field name="date" readonly="1"/>-->
+                        <!--</tree>-->
+                    <!--</field>-->
+                    <!--<div>-->
+                        <!--<p class="text-warning">-->
+                        <!--1. Employee self-assessment or supervisor/manager assessment must be based on facts;<br/>-->
+                        <!--2. If the grade cannot reach to 1,it is allowed to represent by 0；<br/>-->
+                        <!--3. Higher scores can only be achieved after reaching a lower standard；<br/>-->
+                        <!--4. 0.5 points is allowed after the decimal point；<br/>-->
+                        <!--5. If the employee being evaluated has a score of 0, 0.5, or 8 or more, the manager must indicate the reason.<br/>-->
+                        <!--</p>-->
+                    <!--</div>-->
+                <!--</page>-->
+            <!--</xpath>-->
+        <!--</field>-->
+    <!--</record>-->
+
+    <!-- EMPLOYEES INHERITED TREE VIEW -->
+    <record id="view_employee_tree_missing_line" model="ir.ui.view">
+        <field name="name">hr.employee.tree.missing.line</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <field name="job_id" position="after">
+                <field name="monthly_score"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_task_timesheet_inherit_button" model="ir.ui.view">
+        <field name="name">project.task.timesheet.inherit.button</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='unit_amount']" position="after">
+                <field name="is_finished_task" invisible="1"/>
+                <button icon="fa fa-check" type="object" name="button_activity" attr="{'invisible':[('is_finished_task','=',True)]}"/>
+                <button icon="fa fa-refresh" type="object" name="btn_todo" attr="{'invisible':[('is_finished_task','=',True)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- EMPLOYEES INHERITED KANBAN VIEW -->
+    <record id="hr_kanban_view_emp_score" model="ir.ui.view">
+        <field name="name">hr.employee.kanban.score</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="monthly_score"/>
+                <field name="worked_time"/>
+            </xpath>
+            <xpath expr="//strong/field[@name='name']" position="after">
+                <div>
+                    Monthly Score:<field name="monthly_score"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='category_ids']" position="after">
+                <div>
+                    Worked:<field name="worked_time"/>Hour
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ir_cron_attention_self_grade" model="ir.cron">
+          <field name="name">Attention to Self Grading</field>
+          <field name="interval_number">1</field>
+          <field name="interval_type">days</field>
+          <field name="numbercall">-1</field>
+          <field eval="False" name="doall"/>
+          <field ref="model_hr_employee" name="model_id"/>
+          <field name="state">code</field>
+          <field name="code">model._need_grade</field>
+    </record>
+
+</odoo>

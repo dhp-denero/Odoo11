@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="partner_bank_action_window" model="ir.actions.act_window">
+            <field name="name">Bank Account List</field>
+            <field name="res_model">res.partner.bank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_partner_id': active_id}</field>
+            <field name="domain">[('partner_id','=',active_id)]</field>
+        </record>
+
+      <record id="res_partner_contract_tree" model="ir.ui.view">
+          <field name="name">res.partner.contract.tree</field>
+          <field name="model">res.partner.contract</field>
+          <field name="arch" type="xml">
+            <tree string="Contracts" editable="top">
+                <field name="number"/>
+                <field name="note"/>
+                <field name="partner_id"/>
+                <field name="type"/>
+            </tree>
+          </field>
+      </record>
+
+
+   <!--form-->
+    <record id="view_form_res_partner_inherit" model="ir.ui.view">
+        <field name="name">res.partner.inherit.customer</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <!-- 银行信息按钮 -->
+                <button type="action" 
+                    class="oe_stat_button" 
+                    name="%(partner_bank_action_window)d" 
+                    icon="fa fa-bank" 
+                    groups="sales_team.group_sale_salesman,purchase.group_purchase_user">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_text">Bank</span>
+                    </div>
+                </button>
+                <button type="action"
+                    class="oe_stat_button"
+                    name="%(partner_bank_action_window)d"
+                    icon="fa fa-bank"
+                    groups="sales_team.group_sale_salesman,purchase.group_purchase_user">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_text">Bank</span>
+                    </div>
+                </button>            </div>
+
+            <!-- 联系人从属信息 -->
+            <xpath expr="//div[@class='o_row']/field[@name='company_name']" position="after">
+                <field name="x_commercial_company_name" placeholder="客户英文全称，供应商英文全称" attrs="{'invisible': [('is_company','=', False)]}"/>
+                <field name="x_groupname" placeholder="集团名称" attrs="{'invisible': [('is_company','=', False)]}"/>
+                <div attrs="{'invisible':['|',('supplier','=', False),('customer','=', False)]}">
+                    <field name="barcode" placeholder="客户编码" attrs="{'invisible': ['|',('supplier','=', True),('is_company','=', False)]}"/>
+                    <field name="barcode" placeholder="供应商编码" attrs="{'invisible': ['|',('customer','=', True),('is_company','=', False)]}"/>
+                    <field name="x_mk_customercode" placeholder="从客户编码表上获取" groups="sales_team.group_sale_salesman" attrs="{'invisible': [('barcode','!=', False)]}"/>
+                    <field name="x_sc_suppliercode" placeholder="例如:00150(参考注册供应商SKU表)" groups="purchase.group_purchase_user" attrs="{'invisible': [('barcode','!=', False)]}"/>
+                </div>
+            </xpath>
+            <!-- 客户、供应商类型 -->
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="x_mk_customertype" groups="sales_team.group_sale_salesman" 
+                    attrs="{'invisible': [('customer','!=', True)]}"/>
+            </xpath>
+            <xpath expr="//group" position="after">
+                <group  string="客户信息"                            
+                        groups="sales_team.group_sale_salesman"
+                        attrs="{'invisible': [('customer','!=', True)]}">
+                    <group string="Website">
+                        <field name="x_clientlinkedin" placeholder="e.g. Client's Linkedin " widget="url"/>
+                        <field name= "x_facebookweb" placeholder="公司或个人的FACEBOOK链接" widget="url"/>
+                        <field name= "x_twitterweb" placeholder="公司或个人的Twitter链接" widget="url"/>
+                        <field name= "x_linkedinweb" placeholder="公司或个人的Linkedin链接" widget="url"/>
+                        <field name= "x_blogweb" placeholder="公司或个人的Blog链接" widget="url"/>
+                    </group>
+                    <group attrs="{'invisible': [('is_company','=', False)]}">
+                        <field name="x_mk_bookingcom" widget="url"/>
+                        <field name="x_mk_tripadvisorcom" widget="url"/>
+                        <field name="x_mk_expediacom" widget="url"/>
+                        <field name="x_mk_homeawaycom" widget="url"/>
+                        <field name="x_mk_airbnbcom" widget="url"/>
+                        <field name="x_mk_ctripcom" widget="url"/>
+                        <field name="x_mk_qunaercom" widget="url"/>
+                    </group>
+                    <group attrs="{'invisible': [('is_company','=', True)]}">
+                        <field name="x_mk_decisionmakingpower"/>
+                        <field name="x_mk_decisionlevel"/>
+                        <field name="x_mk_decisionhierarchy"/>
+                        <field name="x_mk_decisionaffected"/>
+                    </group>
+                    <group attrs="{'invisible': [('is_company','=', False)]}">
+                        <field name="x_mk_clientgrade" placeholder="参考客户等级表" />
+                    </group>
+                </group>
+                <group  string="Supplier"
+                        groups="purchase.group_purchase_user" 
+                        attrs="{'invisible': ['|',('customer','=', True),('is_company','=', False)]}">
+                     <group string="Supplier Website">
+                        <field name= "x_1688" placeholder="公司的1688链接" widget="url"/>
+                        <field name= "x_alibaba" placeholder="公司的alibaba.com链接" widget="url"/>
+                        <field name= "x_tianyancha" placeholder="公司的天眼查链接" widget="url"/>
+                    </group>
+                    <group string="Cooperation">
+                        <field name="x_cooperatoinstarts"/>
+                        <field name="x_cooperationways" placeholder="Example:Chinese agency,Guangdong agency,Brand Licensing..."/>
+                    </group>
+                </group>
+                <group string="个人信息" attrs="{'invisible': [('is_company','=',True)]}">
+                    <group>
+                        <field name= "x_personalemail"/>
+                        <field name= "x_personalmobile"/>
+                        <field name= "x_whatsapp"/>
+                        <field name= "x_facebookmessenger"/>
+                        <field name= "x_skype"/>
+                        <field name= "x_viber"/>
+                        <field name= "x_line"/>
+                        <field name= "x_wechat"/>
+                        <field name= "x_qq"/>
+                        <field name= "x_dateofbirth"/>
+                        <field name= "x_educationexperience" placeholder="Refer LINKEDIN"/>
+                        <field name= "x_workingexperience" placeholder="Refer LINKEDIN"/>
+                        <field name= "x_gender"/>
+                        <field name= "x_personalresume" placeholder="Refer LINKEDIN"/>
+                    </group>
+                </group>
+                <group string="Company Information" attrs="{'invisible': [('is_company','=', False)]}">
+                    <group string="General Information">
+                        <!--<field name="infosource" placeholder="Example:双喜，LINKEDIN, 广交会展商"/>-->
+                        <field name="x_background" placeholder="Company or Individual Resume"/>
+                        <field name="x_existence" placeholder="Opening?"/>
+                        <field name="x_turnover" placeholder="(Ten thousand dollars)"/>
+                        <field name="x_dateofestablishment" placeholder="Example:1997-11-11（Accurate to date）"/>
+                        <field name="x_staffnumbers" placeholder="Example:50 members"/>
+                        <field name="x_cityrating" widget="many2many_tags"/>
+                        <field name="x_area" placeholder="...m2"/>
+                        <field name="x_structuretree"/>
+                    </group>
+                    <group  string="Company Information"
+                            groups="sales_team.group_sale_salesman"
+                            attrs="{'invisible': [('customer','!=', True)]}">
+                        <field name="x_mk_rating" placeholder="酒店星级，餐厅或工程级别" />
+                        <field name="x_mk_productpreference" placeholder="参考一级品类" />
+                        <field name="x_mk_pricepreference" placeholder="（价格偏好）" />
+                        <field name="x_mk_purchaseingtime" placeholder="（活动偏好）" />
+                        <field name="x_mk_phase"/>
+                        <field name="x_mk_existingprocurementchannels"/>
+                        <field name="x_mk_existingmaterialusage"/>
+                    </group>
+                    <group string="Hotel Scale"
+                           groups="sales_team.group_sale_salesman"
+                           attrs="{'invisible': [('customer','!=', True)]}">
+                        <field name="x_mk_numberofoperatinghotels"/>
+                        <field name="x_mk_roomnumbers"/>
+                        <field name="x_mk_numberofoperatingrestaurants" />
+                        <field name="x_mk_poolandwellness"/>
+                        <field name="x_mk_businessfacilities"/>
+                        <field name="x_mk_recreationalfacilitiesandfamilyservices" />
+                    </group>
+                    <group string="Supplier Background"
+                        groups="purchase.group_purchase_user" 
+                        attrs="{'invisible': [('supplier','!=', True)]}">
+                        <field name="x_companycategory"/>
+                        <field name="businesslicensenumber" placeholder="Refer Tianyancha.com"/>
+                        <field name="x_registrationaddress" placeholder="Refer Tianyancha.com"/>
+                        <field name="x_businessscope" placeholder="Refer Tianyancha.com"/>
+                        <field name="x_legalrepresentative" placeholder="Refer Tianyancha.com"/>
+                        <field name="x_typeofregistration" placeholder="Refer Tianyancha.com"/>
+                        <field name="x_registrationcapital" placeholder="Refer Tianyancha.com"/>
+                        <field name="x_registrationauthority" placeholder="Refer Tianyancha.com"/>
+                        <field name="x_trademark" placeholder="Refer Tianyancha.com"/>
+                        <field name="x_intellectualproperty" placeholder="Refer Tianyancha.com"/>
+                        <field name="x_taxpayertype" placeholder="Refer Tianyancha.com"/>
+                    </group>
+                    <group string="Product Information" groups="purchase.group_purchase_user" attrs="{'invisible': [('supplier','!=', True)]}">
+                        <field name="x_sc_pricerange"/>
+                        <field name="x_sc_categorybrands" placeholder="List famous brands"/>
+                        <field name="x_sc_mainproductscn" placeholder="Example:beds, headboard, tables, wardrobe"/>
+                        <field name="x_sc_mainproductsen" placeholder="Example:beds, headboard, tables, wardrobe"/>
+                        <field name="x_sc_productioncycle" placeholder="Example:Standard 30 days，Customized 60 days"/>
+                        <field name="x_sc_productionfacility" placeholder="Example:Automatic Punching Machine 10 Unit,压板机2台…"/>
+                        <field name="x_sc_peaklowseasons" placeholder="Example:April-June"/>
+                        <field name="stock_exist"/>
+                    </group>
+
+                    <group groups="purchase.group_purchase_user" attrs="{'invisible': [('customer','!=', True)]}">
+                        <field name="x_sc_paymentcycle"/>
+                        <field name="x_sc_supplierbigclients" placeholder="Example:Hilton,Walmart,Starbuck's" />
+                        <field name="x_sc_exportrights" />
+                        <field name="x_sc_suppliertaxrebate" />
+                        <field name="x_sc_foreigncurrency" />
+                        <field name="x_sc_exportpercentage" />
+                    </group>
+                </group>
+            </xpath>
+
+            <xpath expr="//field[@name='child_ids']/form//field[@name='function']" position="after">
+
+                <field name="x_qq"/>
+                <field name="x_wechat"/>
+            </xpath>
+
+            <xpath expr="//group[@name='purchase']/field[@name='supplier']" position="after">
+                <field name="user_id" string="采购员"/>
+            </xpath>
+
+            <xpath expr="//group/field[@name='title']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_company','=', True)]}</attribute>
+            </xpath>
+
+            <xpath expr="//group[@name='sale']" position="attributes">
+                <attribute name="groups">sales_team.group_sale_salesman</attribute>
+            </xpath>
+
+            <xpath expr="//group[@name='purchase']" position="attributes">
+                <attribute name="groups">purchase.group_purchase_user</attribute>
+            </xpath>
+
+            <xpath expr="//page[@name='sales_purchases']" position="before">
+                <page name="contract" string="Contracts">
+                    <group>
+                        <button name="view_phone" type="object" icon="fa fa-phone"/>
+                        <button name="view_email" type="object" icon="fa fa-envelope-o"/>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//page[@name='sales_purchases']" position="attributes">
+                <attribute name="groups">sales_team.group_sale_salesman,purchase.group_purchase_user</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='vat']" position="replace">
+                <field name="vat" string="税号" attrs="{'invisible':[('company_type', '=', 'person')]}"
+                       placeholder="请填写公司税号"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_partner_short_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_short_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" positon='replace'>
+                <field name="vat" placeholder="请填写公司税号" string="税号"
+                       attrs="{'invisible': [('company_type','=', 'person')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+        <record id="partner_search_form_view_inherit" model="ir.ui.view">
+            <field name="name">res.partner.select</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="parent_id" string="Company" filter_domain="['|','|',('x_groupname','ilike',self),('x_commercial_company_name','ilike',self),('name','ilike',self)]"/>
+                    <field name="city" string="Location" filter_domain="['|','|',('city','ilike',self),('state_id','ilike',self),('country_id','ilike',self)]"/>
+                    <separator/>
+                    <field name="infosource" string="数据来源" groups="sales_team.group_sale_salesman,purchase.group_purchase_user"/>
+                    <separator/>
+                    <field name="x_sc_maincategory" string="主要品类" filter_domain="['|','|',('x_sc_maincategory','ilike',self),('sc_maincategoryen','ilike',self)]" groups="purchase.group_purchase_user"/>
+                    <field name="x_sc_mainproductscn" string="主要产品" filter_domain="['|',('x_sc_mainproductsen','ilike',self),('x_sc_mainproductscn','ilike',self)]" groups="purchase.group_purchase_user"/>
+                </xpath>
+                <xpath expr="//group[@name='group_by']" position="inside">
+                    <filter name="group_stage" string="合作阶段" domain="[('supplier','=',True),('is_company','=',True)]" context="{'group_by': 'x_sc_supplierstage'}" groups="purchase.group_purchase_user"/>
+                    <filter name="group_information" string="信息处理阶段" domain="[('supplier','=',True),('is_company','=',True)]" context="{'group_by': 'product_information_processing_stage'}" groups="purchase.group_purchase_user"/>
+                    <filter name="group_rank" string="客户等级" domain="[('customer','=',True)]" context="{'group_by':'x_mk_clientgrade'}" groups="sales_team.group_sale_salesman"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

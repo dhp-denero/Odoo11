@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <act_window
+            id="action_res_department"
+            name="View Department"
+            res_model="res.department"
+            view_type="form"
+            view_mode="tree,form"/>
+
+        <record id="res_department_search_form_view" model="ir.ui.view">
+            <field name="name">res.department.search.form</field>
+            <field name="model">res.department</field>
+            <field name="arch" type="xml">
+                <search string="Department">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_department_form" model="ir.ui.view">
+            <field name="name">res.department.form</field>
+            <field name="model">res.department</field>
+            <field name="arch" type="xml">
+                <form string="Department">
+                    <sheet>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Department"/>
+                            </div>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group string="Description">
+                            <field name="parent_id"/>
+                            <field name="description" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_department_tree" model="ir.ui.view">
+            <field name="name">res.department.tree</field>
+            <field name="model">res.department</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="partner_search_form_view_department" model="ir.ui.view">
+            <field name="name">res.partner.select.department</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[last()]" position="after">
+                    <field name="department" domain="[('is_company','=',False)]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_department_line_search_form_view" model="ir.ui.view">
+            <field name="name">res.department.line.search.form</field>
+            <field name="model">res.department.line</field>
+            <field name="arch" type="xml">
+                <search string="Department">
+                    <field name="product_id"/>
+                    <field name="department_id"/>
+                    <field name="application"/>
+                   <group expand="0" name="group_by" string="Group By">
+                       <filter name="groupby_product_quot_id" string="Product" domain="[]" context="{'group_by' : 'product_quot_id'}"/>
+                       <filter name="groupby_department_id" string="Department" domain="[]" context="{'group_by' : 'department_id'}"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_res_department_line_tree" model="ir.ui.view">
+            <field name="name">res.department.line.tree</field>
+            <field name="model">res.department.line</field>
+            <field name="arch" type="xml">
+                <tree editable="top">
+                    <field name="product_id"/>
+                    <field name="department_id"/>
+                    <field name="application"/>
+                    <field name="daily_cost"/>
+                    <field name="values" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_partner_form_department" model="ir.ui.view">
+            <field name="name">res.partner.form.department</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="is_company" invisible="1"/>
+                    <field name="department" widget="many2many_tags" attrs="{'invisible': [('is_company','=', True)]}"/>
+                    <field name="application" widget="many2many_tags" attrs="{'invisible': [('is_company','=', True)]}"/>
+                </xpath>
+
+                <xpath expr="//div[hasclass('oe_kanban_details')]" position="after">
+                    <span class="oe_kanban_list_many2many">
+                     <field name="department" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('is_company','=', True)]}"/>
+                     <field name="application" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('is_company','=', True)]}"/>
+                    </span>
+                </xpath>
+
+            <xpath expr="//field[@name='child_ids']/form//field[@name='function']" position="after">
+                <field name="is_company" invisible="1"/>
+                <field name="department" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('is_company','=', True)]}"/>
+                <field name="application" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('is_company','=', True)]}"/>
+            </xpath>
+            </field>
+        </record>
+
+        <record id="res_department_stock_line_search_form_view" model="ir.ui.view">
+            <field name="name">res.department.stock.line.form</field>
+            <field name="model">res.department.stock.line</field>
+            <field name="arch" type="xml">
+                <search string="Stock">
+                    <field name="name"  filter_domain="['|','|',('display_name','ilike',self),('product_id','=',self),('partner_id','ilike',self)]"/>
+                    <field name="application"  filter_domain="['|',('department_id','ilike',self),('application','=',self)]"/>
+                    <field name="partner_id"/>
+                    <separator/>
+                    <filter name="week" string="This Week" domain="[                                 '&amp;',                                 ('date', '&gt;=', (context_today() + relativedelta(weeks=-1,days=1,weekday=0)).strftime('%Y-%m-%d')),                                 ('date', '&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')),                             ]"/>
+                    <filter name="month" string="This Month" domain="[                                 '&amp;',                                 ('date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),                                 ('date', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d')),                             ]"/>
+                    <filter name="pending" string="Pending" domain="[('state','=','1')]"/>
+                    <filter string="State" name="groupby_state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Application" name="groupby_application" domain="[]" context="{'group_by':'application'}"/>
+                    <filter string="Department" name="groupby_department_id" domain="[]" context="{'group_by':'department_id'}"/>
+                </search>
+            </field>
+        </record>
+
+    <record id="view_res_department_stock_line_tree" model="ir.ui.view">
+        <field name="name">res.department.stock.line.tree</field>
+        <field name="model">res.department.stock.line</field>
+        <field name="arch" type="xml">
+            <tree editable="top">
+                <button name="out_stock" type="object" icon="fa fa-check" attrs="{'invisible': ['|',('state','=','2'),('state','=','3')]}"/>
+                <button name="not_approve" type="object" icon="fa fa-close" attrs="{'invisible': ['|',('state','=','2'),('state','=','3')]}"/>
+                <field name="state" readonly="1"/>
+                <field name="product_quot_id" readonly="1"/>
+                <field name="name"/>
+                <field name="department_id"/>
+                <field name="application"/>
+                <field name="date"/>
+                <field name="amount" sum="Total"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_form_wizard_stock_line_append_br" model="ir.ui.view">
+        <field name="name">res.department.stock.line.append</field>
+        <field name="model">res.department.stock.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="partner_id" invisible="1" required="1"/>
+                        <field name="product_id" invisible="1" required="1"/>
+                        <field name="product_quot_id" readonly="1" required="1"/>
+                        <field name="amount"/>
+                        <field name="department_id"/>
+                        <field name="application"/>
+                        <field name="uom_id" readonly="1"/>
+                        <field name="date"/>
+                        <field name="name"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="confirm" string="Apply" type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+        <menuitem
+            name="Department"
+            id="menu_res_department"
+            action="action_res_department"
+            parent="contacts.res_partner_menu_config"/>
+    </data>
+</odoo>
